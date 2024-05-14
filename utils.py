@@ -1,7 +1,7 @@
 import torch
 import torchvision
 from torchvision.transforms import v2
-from models import EthanNet30
+from models import EthanNet30, EthanNet29K
 import lightning as L
 from lightning.pytorch.callbacks.early_stopping import EarlyStopping
 from strategies import CustomDDPStrategy
@@ -36,13 +36,14 @@ def train_model(trainloader, valloader, testloader):
                                         verbose=False,
                                         mode="min")
     trainer = L.Trainer(max_epochs=80,
-                        strategy=CustomDDPStrategy(),
+                        # strategy=CustomDDPStrategy(),
                         accelerator='gpu', 
-                        devices=2,
-                        precision="bf16-true", 
+                        devices=1,
+                        # precision="bf16-true",
                         callbacks=[early_stop_callback],
                         deterministic=True)
     with trainer.init_module():
-        model = EthanNet30()
+        model = EthanNet29K()
+        model.to(torch.float32)
     trainer.fit(model, trainloader, valloader)
     trainer.test(model, testloader)

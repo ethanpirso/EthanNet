@@ -187,7 +187,7 @@ class EthanNet29K(L.LightningModule):
         x = self.resnet_block(x)
         x = self.pool(x)
         x = torch.flatten(x, 1)
-        x = self.kan(x)
+        x, _, _, _ = self.kan(x)  # Unpacking all returned values
         return x
     
     def on_train_epoch_end(self):
