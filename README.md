@@ -48,7 +48,7 @@ A Kolmogorov Arnold Network (KAN) layer that maps the flattened ResNet block out
 
 The training strategy involves:
 - **Data Loading**: Using custom data loaders for the CIFAR-10 dataset with appropriate transformations.
-- **Distributed Training**: Utilizing a custom data parallel strategy (`CustomDDPStrategy`) with the Gloo backend for GPU, as NCCL is not available on Windows machines. The training was conducted on NVIDIA RTX 4090 and RTX 4060 GPUs.
+- **Distributed Training**: Utilizing a custom data parallel strategy (`CustomDDPStrategy`) with the Gloo backend for GPU, as NCCL is not available on Windows machines. The training was conducted on NVIDIA RTX 3090 and RTX 4060 GPUs.
 - **Early Stopping**: Implementing early stopping to prevent overfitting.
 - **Precision**: Setting the default precision for matrix multiplication to 'medium' and using bf16-true precision during training.
 
