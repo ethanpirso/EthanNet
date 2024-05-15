@@ -56,6 +56,6 @@ The training strategy involves:
 
 *To be filled in later with the time it took to train, and the performance metrics (train/val/test accuracy, loss).*
 
-## Author
+## Authors
 
 Ethan Pirso

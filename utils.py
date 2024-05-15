@@ -5,6 +5,7 @@ from models import EthanNet30, EthanNet29K
 import lightning as L
 from lightning.pytorch.callbacks.early_stopping import EarlyStopping
 from strategies import CustomDDPStrategy
+import os
 
 def load_data():
     # Transformations for the CIFAR-10 dataset
@@ -36,9 +37,9 @@ def train_model(trainloader, valloader, testloader):
                                         verbose=False,
                                         mode="min")
     trainer = L.Trainer(max_epochs=80,
-                        # strategy=CustomDDPStrategy(),
+                        strategy=CustomDDPStrategy(),
                         accelerator='gpu', 
-                        devices=1,
+                        devices=2,
                         # precision="bf16-true",
                         callbacks=[early_stop_callback],
                         deterministic=True)
@@ -47,3 +48,18 @@ def train_model(trainloader, valloader, testloader):
         model.to(torch.float32)
     trainer.fit(model, trainloader, valloader)
     trainer.test(model, testloader)
+    
+    return model, model.__class__.__name__
+
+def save_model(model, path='model.pth'):
+    """
+    Save the model to the specified path using PyTorch's save function.
+
+    Args:
+        model (torch.nn.Module): The model to be saved.
+        path (str): The path where the model will be saved.
+    """
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    # Save the model state dictionary
+    torch.save(model.state_dict(), path)

@@ -1,7 +1,7 @@
 import os
 import torch
 import lightning as L
-from utils import load_data, train_model
+from utils import load_data, train_model, save_model
 
 if __name__ == '__main__':
     # Set the MASTER_ADDR and MASTER_PORT environment variables
@@ -21,7 +21,9 @@ if __name__ == '__main__':
 
     # Train the model
     try:
-        train_model(trainloader, valloader, testloader)
+        model, model_name = train_model(trainloader, valloader, testloader)
+        save_model(model, path=f'saved_models/{model_name}.pth')
+
     except Exception as e:
         print("An error occurred during model training:", str(e))
         if torch.distributed.is_initialized():
