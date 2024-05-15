@@ -2,3 +2,4 @@ __init__.py
 __pycache__/
 data/
 lightning_logs/
+saved_models/

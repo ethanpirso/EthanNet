@@ -7,9 +7,9 @@ from torchmetrics import Accuracy, Precision, Recall, F1Score
 from modules import DeepBottleneckResNet, VGGBlock
 from kan import KANLayer
 
-class EthanNet30(L.LightningModule):
+class EthanNet40(L.LightningModule):
     """
-    EthanNet-30 is a deep convolutional neural network designed for image classification tasks, 
+    EthanNet-40 is a deep convolutional neural network designed for image classification tasks, 
     integrating VGG-like blocks and ResNet-like bottleneck blocks for effective feature extraction.
     This model is structured to balance depth and computational efficiency while maintaining high accuracy.
 
@@ -24,9 +24,9 @@ class EthanNet30(L.LightningModule):
         vgg_block1 (nn.Module): First VGG block starting with 16 channels and 2 repetitions, includes dropout.
         vgg_block2 (nn.Module): Second VGG block with 32 channels and 3 repetitions, includes dropout.
         vgg_block3 (nn.Module): Third VGG block with 64 channels and 3 repetitions, includes dropout.
-        resnet_block (DeepBottleneckResNet): ResNet block with layers configured for 256 and 512 channels, each repeated 3 times.
+        resnet_block (DeepBottleneckResNet): ResNet block with layers configured for 256, 512, and 1024 channels, repeated 3, 4, and 3 times, respectively.
         pool (nn.AvgPool2d): Average pooling layer that reduces the feature map size.
-        fc1 (nn.Linear): First fully connected layer reducing dimension to 2048 units.
+        fc1 (nn.Linear): First fully connected layer with 4096 input and output units.
         bn (nn.BatchNorm1d): Batch normalization for the output of the first FC layer.
         dropout (nn.Dropout): Dropout layer set at 0.5 to prevent overfitting.
         fc2 (nn.Linear): Second fully connected layer that outputs predictions for 10 classes.
@@ -43,7 +43,7 @@ class EthanNet30(L.LightningModule):
 
     Example usage:
         # Assuming `train_dataloader` is defined elsewhere
-        model = EthanNet30()
+        model = EthanNet40()
         trainer = L.Trainer()
         trainer.fit(model, train_dataloader)
     """
@@ -52,12 +52,12 @@ class EthanNet30(L.LightningModule):
         self.vgg_block1 = VGGBlock(3, 16, 2, dropout=0.2)
         self.vgg_block2 = VGGBlock(16, 32, 3, dropout=0.2)
         self.vgg_block3 = VGGBlock(32, 64, 3, dropout=0.2)
-        self.resnet_block = DeepBottleneckResNet(64, [256, 512], [3, 3], dilation=1)
+        self.resnet_block = DeepBottleneckResNet(64, [256, 512, 1024], [3, 4, 3], dilation=1)
         self.pool = nn.AvgPool2d(kernel_size=2, stride=2)
-        self.fc1 = nn.Linear(512 * 2 * 2, 2048)
-        self.bn = nn.BatchNorm1d(2048)
+        self.fc1 = nn.Linear(1024 * 2 * 2, 4096)
+        self.bn = nn.BatchNorm1d(4096)
         self.dropout = nn.Dropout(0.5)
-        self.fc2 = nn.Linear(2048, 10)
+        self.fc2 = nn.Linear(4096, 10)
 
         # Define the metrics
         self.accuracy = Accuracy(task='multiclass', num_classes=10)
@@ -128,9 +128,9 @@ class EthanNet30(L.LightningModule):
         optimizer = torch.optim.Adam(self.parameters(), lr=0.001)
         return optimizer
 
-class EthanNet29K(L.LightningModule):
+class EthanNet39K(L.LightningModule):
     """
-    EthanNet-29K is a deep convolutional neural network designed for image classification tasks, 
+    EthanNet-39K is a deep convolutional neural network designed for image classification tasks, 
     integrating VGG-like blocks and ResNet-like bottleneck blocks for effective feature extraction.
     This model is structured to balance depth and computational efficiency while maintaining high accuracy.
 
@@ -145,7 +145,7 @@ class EthanNet29K(L.LightningModule):
         vgg_block1 (nn.Module): First VGG block starting with 16 channels and 2 repetitions, includes dropout.
         vgg_block2 (nn.Module): Second VGG block with 32 channels and 3 repetitions, includes dropout.
         vgg_block3 (nn.Module): Third VGG block with 64 channels and 3 repetitions, includes dropout.
-        resnet_block (DeepBottleneckResNet): ResNet block with layers configured for 256 and 512 channels, each repeated 3 times.
+        resnet_block (DeepBottleneckResNet): ResNet block with layers configured for 256, 512, and 1024 channels, repeated 3, 4, and 3 times, respectively.
         pool (nn.AvgPool2d): Average pooling layer that reduces the feature map size.
         kan (KANLayer): Kolmogorov Arnold Network layer that maps the flattened ResNet block output to 10 classes.
         accuracy, precision, recall, f1 (torchmetrics.*): Metric instances for monitoring training performance.
@@ -161,7 +161,7 @@ class EthanNet29K(L.LightningModule):
 
     Example usage:
         # Assuming `train_dataloader` is defined elsewhere
-        model = EthanNet29K()
+        model = EthanNet39K()
         trainer = L.Trainer()
         trainer.fit(model, train_dataloader)
     """
@@ -170,9 +170,9 @@ class EthanNet29K(L.LightningModule):
         self.vgg_block1 = VGGBlock(3, 16, 2, dropout=0.2)
         self.vgg_block2 = VGGBlock(16, 32, 3, dropout=0.2)
         self.vgg_block3 = VGGBlock(32, 64, 3, dropout=0.2)
-        self.resnet_block = DeepBottleneckResNet(64, [256, 512], [3, 3], dilation=1)
+        self.resnet_block = DeepBottleneckResNet(64, [256, 512, 1024], [3, 4, 3], dilation=1)
         self.pool = nn.AvgPool2d(kernel_size=2, stride=2)
-        self.kan = KANLayer(512 * 2 * 2, 10, k=3)
+        self.kan = KANLayer(1024 * 2 * 2, 10, k=3)
 
         # Define the metrics
         self.accuracy = Accuracy(task='multiclass', num_classes=10)
