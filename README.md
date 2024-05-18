@@ -54,7 +54,11 @@ The training strategy involves:
 
 ## Results
 
-*To be filled in later with the time it took to train, and the performance metrics (train/val/test accuracy, loss).*
+EthanNet-40 training was halted after 10 epochs due to a lack of improvement in loss, triggering early stopping. This model achieved a disappointing accuracy of 29%. In contrast, EthanNet-39K, which shares a similar architecture, demonstrated significantly better performance. It trained for 40 epochs before early stopping was applied, achieving a test accuracy of 76%. While not the top-performing model, EthanNet-39K's efficiency is notable, thanks to its combination of VGG and ResNet architectures. The inclusion of the KAN layer, replacing the traditional fully connected layers, contributed to more efficient learning.
+
+## Future Work
+
+Future work should focus on evaluating the performance of models that exclusively use either VGG or ResNet architectures to determine their individual strengths and weaknesses. Additionally, the concept of Kolmogorov Arnold Network (KAN) layers shows promise and warrants further exploration. Investigating the feasibility of integrating KAN layers within convolutional layers could potentially lead to more powerful and flexible models. This approach could combine the benefits of convolutional operations with the advanced function approximation capabilities of KAN layers, potentially leading to significant improvements in model performance and efficiency.
 
 ## Authors
 

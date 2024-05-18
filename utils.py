@@ -59,7 +59,9 @@ def save_model(model, path='model.pth'):
         model (torch.nn.Module): The model to be saved.
         path (str): The path where the model will be saved.
     """
-    # Ensure the directory exists
-    os.makedirs(os.path.dirname(path), exist_ok=True)
+    # Ensure the directory exists only if it doesn't exist
+    dir_name = os.path.dirname(path)
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
     # Save the model state dictionary
     torch.save(model.state_dict(), path)
